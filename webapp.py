@@ -59,7 +59,6 @@ class SimulatedAnnealing:
 
             if self.problem.is_constraint_satisfied(new_x, new_y):
                 return new_x, new_y
-            return current_x, current_y
 
     def run(self):
         current_x, current_y = self.generate_initial_solution()
