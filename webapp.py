@@ -59,6 +59,7 @@ class SimulatedAnnealing:
 
             if self.problem.is_constraint_satisfied(new_x, new_y):
                 return new_x, new_y
+            return current_x, current_y
 
     def run(self):
         current_x, current_y = self.generate_initial_solution()
@@ -170,7 +171,7 @@ def main():
     # Define the bounds for x and y
 
     # bounds = [(x_lb, x_ub), (y_lb, y_ub)]
-    bounds = [(-15, 15), (-15, 15)]
+    bounds = [(-10, 10), (-10, 10)]
     # Parameters for Simulated Annealing
 
     # num_iterations = 1000
@@ -195,27 +196,27 @@ def main():
             col1, col2 = st.columns(2)
             with col1:
                 opt_x_loc = st.number_input(
-                    "Target x-coordinate", min_value=-10, max_value=10
+                    "Target x-coordinate", min_value=-10, max_value=10, value=0
                 )
             with col2:
                 opt_y_loc = st.number_input(
-                    "Target y-coordinate", min_value=-10, max_value=10
+                    "Target y-coordinate", min_value=-10, max_value=10, value=0
                 )
         with st.container():
             col1, col2 = st.columns(2)
             with col1:
                 init_x_loc = st.number_input(
-                    "Init x-coordinate", min_value=-10, max_value=10
+                    "Init x-coordinate", min_value=-10, max_value=10, value=0
                 )
             with col2:
                 init_y_loc = st.number_input(
-                    "Init y-coordinate", min_value=-10, max_value=10
+                    "Init y-coordinate", min_value=-10, max_value=10, value=0
                 )
             randomized_init = st.checkbox("Randomize initial solution")
 
     # Generate a grid of points for contour plotting
-    x_grid = np.linspace(bounds[0][0], bounds[0][1], 100)
-    y_grid = np.linspace(bounds[1][0], bounds[1][1], 100)
+    x_grid = np.linspace(bounds[0][0] - 5, bounds[0][1] + 5, 100)
+    y_grid = np.linspace(bounds[1][0] - 5, bounds[1][1] + 5, 100)
     X, Y = np.meshgrid(x_grid, y_grid)
     Z = define_objective(selected_objective_func_, X, Y)
     # Create a contour plot
@@ -266,20 +267,20 @@ def main():
                 st.metric(
                     label="Best x-solution",
                     value=np.round(best_x_with_constraint, prec_),
-                    delta=np.round(x_diff_from_target, prec_),
+                    delta=float(np.round(x_diff_from_target, prec_)),
                 )
             with col2:
                 y_diff_from_target = best_y_with_constraint - opt_y_loc
                 st.metric(
                     label="Best y-solution",
                     value=np.round(best_y_with_constraint, prec_),
-                    delta=np.round(y_diff_from_target, prec_),
+                    delta=float(np.round(y_diff_from_target, prec_)),
                 )
         obj_diff_from_target = best_cost_with_constraint - target_obj
         st.metric(
             label="Objective Value",
             value=np.round(best_cost_with_constraint, prec_),
-            delta=np.round(obj_diff_from_target, prec_),
+            delta=float(np.round(obj_diff_from_target, prec_)),
         )
     # Plot the entire trajectory including the initial point
     fig.add_trace(
